@@ -18,8 +18,7 @@ class {{stack_projectName}}Stack(Stack):
         # DEFINE SOURCE BUCKET
         # Assuming that the bucket already exists
 
-        # SOURCE_BUCKET = "<PUT BUCKET NAME HERE>"
-        SOURCE_BUCKET = "aya-tsa"
+        SOURCE_BUCKET = "<PUT BUCKET NAME HERE>"
 
         source_s3_bucket = s3.Bucket.from_bucket_arn(
             self,
