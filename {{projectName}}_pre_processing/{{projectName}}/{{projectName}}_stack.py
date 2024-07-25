@@ -46,6 +46,7 @@ class {{stack_projectName}}Stack(Stack):
             removal_policy=RemovalPolicy.DESTROY
         )
 
+        # docker based lambda function
         lambda_with_docker = _lambda.DockerImageFunction(
             self,
             f'{SOURCE_BUCKET.capitalize()}-Lambda-ChangeMe',
@@ -60,6 +61,19 @@ class {{stack_projectName}}Stack(Stack):
             ephemeral_storage_size=Size.gibibytes(2),
             timeout=Duration.minutes(5),
             memory_size=128
+        )
+
+        # lambda code direct - no package installation required
+        stop_lambda = _lambda.Function(
+            self, "StopInstanceLambda",
+            runtime=_lambda.Runtime.PYTHON_3_8,
+            handler="stop_instance.handler",
+            code=_lambda.Code.from_asset("lambda"),
+            environment={
+                'SOURCE_BUCKET': source_s3_bucket.bucket_name,
+                'TARGET_BUCKET': target_s3_bucket.bucket_name,
+                'METADATA': metadata.table_name
+            }
         )
 
         source_s3_bucket.grant_read(lambda_with_docker)
